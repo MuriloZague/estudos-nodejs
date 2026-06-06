@@ -26,6 +26,21 @@ app.get("/usuarios", async (req, res) => {
 });
 
 app.post("/usuarios", async (req, res) => {
+  let regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //validacoes basicas sem zod/prisma
+  if (req.body.name === ""){
+    res.status(400).send({message: "falta nome!"})
+    return
+  } else if (isNaN(req.body.age)) {
+    res.status(400).send({message: "idade incorreta!"})
+    return
+  } else if (!regexEmail.test(req.body.email)){
+    res.status(400).send({message: "preencha um email valido!"})
+    return
+  } else if ((req.body.password).length < 6){
+    res.status(400).send({message: "senha precisa ter no minimo 6 caracteres!"})
+    return
+  }
 
   await prisma.user.create({
     data: {
